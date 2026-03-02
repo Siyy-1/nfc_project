@@ -69,98 +69,95 @@
     </div>
 
     <script>
-        // 기초 데이터 (이모지는 메뉴 화면용으로 남겨둡니다)
-        const zodiacs = {
-            'rat': { title: '쥐띠', icon: '🐭' }, 'ox': { title: '소띠', icon: '🐮' }, 'tiger': { title: '호랑이띠', icon: '🐯' }, 'rabbit': { title: '토끼띠', icon: '🐰' },
-            'dragon': { title: '용띠', icon: '🐲' }, 'snake': { title: '뱀띠', icon: '🐍' }, 'horse': { title: '말띠', icon: '🐴' }, 'sheep': { title: '양띠', icon: '🐑' },
-            'monkey': { title: '원숭이띠', icon: '🐵' }, 'rooster': { title: '닭띠', icon: '🐔' }, 'dog': { title: '개띠', icon: '🐶' }, 'pig': { title: '돼지띠', icon: '🐷' }
-        };
+// 1. 기초 데이터 설정
+const zodiacs = {
+    'rat': { title: '쥐띠', icon: '🐭' }, 'ox': { title: '소띠', icon: '🐮' }, 'tiger': { title: '호랑이띠', icon: '🐯' }, 'rabbit': { title: '토끼띠', icon: '🐰' },
+    'dragon': { title: '용띠', icon: '🐲' }, 'snake': { title: '뱀띠', icon: '🐍' }, 'horse': { title: '말띠', icon: '🐴' }, 'sheep': { title: '양띠', icon: '🐑' },
+    'monkey': { title: '원숭이띠', icon: '🐵' }, 'rooster': { title: '닭띠', icon: '🐔' }, 'dog': { title: '개띠', icon: '🐶' }, 'pig': { title: '돼지띠', icon: '🐷' }
+};
 
-        // ★★★ [가장 중요한 부분] 데이터 구조 수정 ★★★
-        // 각 운세 문구별로 어울리는 이미지 주소를 한 쌍으로 묶습니다.
-        // 여기에 직접 AI로 생성한 GIF나 이미지 링크를 넣으시면 됩니다.
-        const fortuneDataPool = [
-            { 
-                text: "재물운이 아주 좋습니다! 뜻밖의 횡재수나 기분 좋은 보너스를 기대해 보세요.",
-                // 예시: 돈벼락을 맞으며 기뻐하는 토끼 GIF
-                imgUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y4M2RpY2I0Mml6ZWljYnlvYm5xZ2V6ODl4ZWxndXJvZWltNWhvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LdOyjZ7Rl5Mkg/giphy.gif"
-            },
-            { 
-                text: "오늘은 꼼꼼한 일 처리가 빛을 발합니다. 주변의 인정을 받아 승진 기회가 생길 수도 있습니다.",
-                // 예시: 열심히 서류 작업하는 안경 쓴 양 GIF
-                imgUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y4M2RpY2I0Mml6ZWljYnlvYm5xZ2V6ODl4ZWxndXJvZWltNWhvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oKIPnAiaMCws8nruU/giphy.gif"
-            },
-            { 
-                text: "대인 관계가 원만해집니다. 오해가 풀리고 주변 사람들과 즐거운 시간을 보낼 수 있습니다.",
-                // 예시: 친구들과 파티하며 춤추는 원숭이 GIF
-                imgUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y4M2RpY2I0Mml6ZWljYnlvYm5xZ2V6ODl4ZWxndXJvZWltNWhvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3V0lsGtTMSB5YNgc/giphy.gif"
-            },
-            { 
-                text: "오늘은 몸과 마음의 휴식이 필요한 때입니다. 무리하지 말고 일찍 귀가하여 에너지를 충전하세요.",
-                // 예시: 이불 속에서 귤 까먹는 게으른 돼지 GIF
-                imgUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y4M2RpY2I0Mml6ZWljYnlvYm5xZ2V6ODl4ZWxndXJvZWltNWhvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mCRJDo24UvM40/giphy.gif"
-            },
-            { 
-                text: "금전적인 지출을 조심해야 하는 날입니다. 충동구매를 피하고 계획적인 소비를 하세요.",
-                // 예시: 지갑이 텅 비어 우는 쥐 PNG/GIF
-                imgUrl: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3Y4M2RpY2I0Mml6ZWljYnlvYm5xZ2V6ODl4ZWxndXJvZWltNWhvYiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OPU6wUK6HaoZdV4VKv/giphy.gif"
-            }
-            // ... 이런 식으로 어울리는 문구와 이미지 쌍을 더 추가해 주세요.
-        ];
+// 2. 운세 문구 풀 (테마 'theme' 키워드 추가)
+const fortuneDataPool = [
+    { 
+        theme: "wealth", // 재물운 테마
+        text: "재물운이 아주 좋습니다! 뜻밖의 횡재수나 기분 좋은 보너스를 기대해 보세요."
+    },
+    { 
+        theme: "work", // 직장/학업 테마
+        text: "오늘은 꼼꼼한 일 처리가 빛을 발합니다. 주변의 인정을 받아 좋은 기회가 생길 수 있습니다."
+    },
+    { 
+        theme: "love", // 대인관계 테마
+        text: "대인 관계가 원만해집니다. 오해가 풀리고 주변 사람들과 즐거운 시간을 보낼 수 있습니다."
+    },
+    { 
+        theme: "rest", // 휴식 테마
+        text: "오늘은 몸과 마음의 휴식이 필요한 때입니다. 무리하지 말고 일찍 귀가하여 에너지를 충전하세요."
+    },
+    { 
+        theme: "warning", // 주의 테마
+        text: "금전적인 지출을 조심해야 하는 날입니다. 충동구매를 피하고 계획적인 소비를 하세요."
+    }
+];
 
-        // 날짜와 띠를 조합하여 오늘의 운세(데이터 객체) 선택
-        function getDailyFortuneData(signKey) {
-            const today = new Date();
-            const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-            const signSeed = signKey.length + signKey.charCodeAt(0); 
-            const index = Math.abs(dateSeed + signSeed) % fortuneDataPool.length;
-            // 인덱스에 해당하는 { text, imgUrl } 객체 전체를 반환
-            return fortuneDataPool[index];
-        }
+// 3. 날짜와 띠를 조합하여 오늘의 운세 선택
+function getDailyFortuneData(signKey) {
+    const today = new Date();
+    const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const signSeed = signKey.length + signKey.charCodeAt(0); 
+    const index = Math.abs(dateSeed + signSeed) % fortuneDataPool.length;
+    return fortuneDataPool[index];
+}
 
-        // 화면 제어 로직
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentSign = urlParams.get('sign');
-        const today = new Date();
+// 4. 화면 제어 로직
+const urlParams = new URLSearchParams(window.location.search);
+const currentSign = urlParams.get('sign');
+const today = new Date();
 
-        if (currentSign && zodiacs[currentSign]) {
-            document.getElementById('result-view').style.display = 'block';
-            document.getElementById('date-text').innerText = `${today.getMonth() + 1}월 ${today.getDate()}일 오늘의 운세`;
-            document.getElementById('zodiac-title').innerText = zodiacs[currentSign].title;
-            
-            // 1. 오늘의 운세 데이터 가져오기
-            const todayFortune = getDailyFortuneData(currentSign);
-            
-            // 2. 텍스트 화면에 출력
-            document.getElementById('fortune-desc').innerText = todayFortune.text;
-            
-            // 3. 이미지를 화면에 출력
-            const imgTag = document.getElementById('dynamic-char-img');
-            const fallbackEmoji = document.getElementById('animal-emoji');
+if (currentSign && zodiacs[currentSign]) {
+    // 운세 결과 화면 표시
+    document.getElementById('result-view').style.display = 'block';
+    document.getElementById('date-text').innerText = `${today.getMonth() + 1}월 ${today.getDate()}일 오늘의 운세`;
+    document.getElementById('zodiac-title').innerText = zodiacs[currentSign].title;
+    
+    // 오늘의 운세 데이터 가져오기
+    const todayFortune = getDailyFortuneData(currentSign);
+    document.getElementById('fortune-desc').innerText = todayFortune.text;
+    
+    // ★★★ [핵심 업데이트] 띠 + 테마를 조합하여 이미지 파일명 생성 ★★★
+    // 예: currentSign이 'rabbit'이고, theme이 'wealth'라면 -> 'rabbit_wealth.png'
+    const imageName = `${currentSign}_${todayFortune.theme}.png`;
+    
+    const imgTag = document.getElementById('dynamic-char-img');
+    const fallbackEmoji = document.getElementById('animal-emoji');
 
-            if (todayFortune.imgUrl) {
-                // 데이터에 이미지 주소가 있는 경우
-                imgTag.src = todayFortune.imgUrl; // 이미지 주소 설정
-                imgTag.style.display = 'block'; // 이미지 태그 보이기
-                fallbackEmoji.style.display = 'none'; // 임시 이모지 숨기기
-            } else {
-                // 이미지 주소가 없는 경우 (이모지로 대체)
-                fallbackEmoji.innerText = zodiacs[currentSign].icon;
-                imgTag.style.display = 'none';
-                fallbackEmoji.style.display = 'block';
-            }
-            
-        } else {
-            // 메뉴 화면 로직 (동일)
-            document.getElementById('menu-view').style.display = 'block';
-            const grid = document.getElementById('zodiac-grid');
-            for (const [key, data] of Object.entries(zodiacs)) {
-                const link = document.createElement('a');
-                link.href = `?sign=${key}`; link.className = 'grid-item';
-                link.innerHTML = `<span class="emoji">${data.icon}</span><span>${data.title}</span>`;
-                grid.appendChild(link);
-            }
-        }
+    // 이미지가 저장된 경로 지정 (예: 깃허브 레포지토리에 같이 올린 경우)
+    imgTag.src = `./${imageName}`; 
+    
+    // 이미지가 성공적으로 로드되면 이모지를 숨기고 이미지를 보여줌
+    imgTag.onload = function() {
+        imgTag.style.display = 'block';
+        fallbackEmoji.style.display = 'none';
+    };
+    // 이미지가 없거나 오류가 나면 이모지를 보여줌 (화면 깨짐 방지)
+    imgTag.onerror = function() {
+        fallbackEmoji.innerText = zodiacs[currentSign].icon;
+        imgTag.style.display = 'none';
+        fallbackEmoji.style.display = 'block';
+    };
+    
+} else {
+    // 메뉴 화면 표시
+    document.getElementById('menu-view').style.display = 'block';
+    const grid = document.getElementById('zodiac-grid');
+    for (const [key, data] of Object.entries(zodiacs)) {
+        const link = document.createElement('a');
+        link.href = `?sign=${key}`; link.className = 'grid-item';
+        link.innerHTML = `<span class="emoji">${data.icon}</span><span>${data.title}</span>`;
+        grid.appendChild(link);
+    }
+}
     </script>
 </body>
 </html>
+
