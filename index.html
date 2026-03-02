@@ -11,8 +11,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #fff8e7; /* 따뜻한 느낌의 배경색 */
+            min-height: 100vh;
+            background-color: #fff8e7;
             font-family: 'Malgun Gothic', sans-serif;
         }
         .card {
@@ -23,10 +23,20 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             text-align: center;
             padding: 30px 20px;
+            display: none; /* 기본적으로 숨김 */
         }
         .icon {
-            font-size: 4rem; /* 이미지를 넣기 전 임시 이모지 크기 */
+            font-size: 4rem;
             margin-bottom: 10px;
+        }
+        /* 이미지 태그를 사용할 때를 위한 스타일 */
+        .custom-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: none;
         }
         h1 {
             color: #d35400;
@@ -43,55 +53,151 @@
             font-size: 1rem;
             line-height: 1.6;
             word-break: keep-all;
+            min-height: 80px;
         }
-        .error {
-            color: red;
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #d35400;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn:hover { background-color: #b54500; }
+        
+        /* 전체 띠 목록 메뉴 스타일 */
+        #menu-view {
+            width: 90%;
+            max-width: 400px;
+            display: none; /* 기본적으로 숨김 */
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            background: white;
+            padding: 15px 5px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .grid-item span.emoji {
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
+    <div class="card" id="result-view">
+        <img src="" alt="캐릭터 아이콘" class="custom-icon" id="custom-animal-icon">
         <div class="icon" id="animal-icon">🔮</div>
         <h1 id="date-text">오늘의 운세</h1>
         <h2 id="zodiac-title">띠를 인식해 주세요</h2>
-        <p class="fortune-text" id="fortune-desc">NFC 키링을 태그하면 운세가 나타납니다.</p>
+        <p class="fortune-text" id="fortune-desc"></p>
+        
+        <a href="?" class="btn">다른 띠 운세도 보기</a>
+    </div>
+
+    <div id="menu-view">
+        <h1 style="color: #d35400; margin-bottom: 5px;">12지신 운세</h1>
+        <p style="color: #666; font-size: 0.9rem;">원하는 띠를 선택해 보세요.</p>
+        <div class="grid" id="zodiac-grid">
+            </div>
     </div>
 
     <script>
-        // 1. 오늘 날짜 표시하기
-        const today = new Date();
-        document.getElementById('date-text').innerText = `${today.getMonth() + 1}월 ${today.getDate()}일 오늘의 운세`;
-
-        // 2. 12지신 데이터 (원하는 문구로 수정 가능!)
-        const horoscopes = {
-            'rat': { title: '쥐띠', icon: '🐭', desc: '재물운이 상승하는 날입니다. 뜻밖의 수입을 기대해 보셔도 좋습니다.' },
-            'ox': { title: '소띠', icon: '🐮', desc: '성실함이 빛을 발하는 하루입니다. 하던 일을 꾸준히 밀고 나가세요.' },
-            'tiger': { title: '호랑이띠', icon: '🐯', desc: '자신감이 넘치는 날입니다. 새로운 도전을 하기에 아주 좋은 타이밍입니다.' },
-            'rabbit': { title: '토끼띠', icon: '🐰', desc: '대인 관계가 원만해집니다. 주변 사람들과 즐거운 시간을 보낼 수 있습니다.' },
-            'dragon': { title: '용띠', icon: '🐲', desc: '막혀있던 문제가 해결될 조짐이 보입니다. 마음의 여유를 가지세요.' },
-            'snake': { title: '뱀띠', icon: '🐍', desc: '직감력이 뛰어난 날입니다. 중요한 결정은 당신의 느낌을 믿어보세요.' },
-            'horse': { title: '말띠', icon: '🐴', desc: '이동수가 있습니다. 가벼운 산책이나 짧은 여행이 기분 전환에 도움이 됩니다.' },
-            'sheep': { title: '양띠', icon: '🐑', desc: '예술적인 영감이 떠오르는 날입니다. 창작 활동이나 취미에 집중해 보세요.' },
-            'monkey': { title: '원숭이띠', icon: '🐵', desc: '센스와 재치가 돋보이는 하루입니다. 문제 해결 능력이 탁월해집니다.' },
-            'rooster': { title: '닭띠', icon: '🐔', desc: '꼼꼼한 일 처리가 인정을 받습니다. 작은 디테일에 신경 쓰세요.' },
-            'dog': { title: '개띠', icon: '🐶', desc: '가족이나 가까운 친구에게 좋은 일이 생길 수 있습니다. 함께 기뻐해 주세요.' },
-            'pig': { title: '돼지띠', icon: '🐷', desc: '먹을 복이 있는 날입니다. 맛있는 음식을 먹으며 스트레스를 날려보세요.' }
+        // 1. 기초 데이터 설정
+        const zodiacs = {
+            'rat': { title: '쥐띠', icon: '🐭' },
+            'ox': { title: '소띠', icon: '🐮' },
+            'tiger': { title: '호랑이띠', icon: '🐯' },
+            'rabbit': { title: '토끼띠', icon: '🐰' },
+            'dragon': { title: '용띠', icon: '🐲' },
+            'snake': { title: '뱀띠', icon: '🐍' },
+            'horse': { title: '말띠', icon: '🐴' },
+            'sheep': { title: '양띠', icon: '🐑' },
+            'monkey': { title: '원숭이띠', icon: '🐵' },
+            'rooster': { title: '닭띠', icon: '🐔' },
+            'dog': { title: '개띠', icon: '🐶' },
+            'pig': { title: '돼지띠', icon: '🐷' }
         };
 
-        // 3. URL에서 파라미터(sign=?) 값 읽어오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const sign = urlParams.get('sign');
+        // 2. 매일 랜덤하게 뽑힐 운세 문구 풀(Pool)
+        const fortunePool = [
+            "재물운이 상승하는 날입니다. 뜻밖의 수입이나 좋은 소식을 기대해 보셔도 좋습니다.",
+            "성실함이 빛을 발하는 하루입니다. 하던 일을 꾸준히 밀고 나가면 좋은 결과가 있습니다.",
+            "자신감이 넘치는 날입니다. 미뤄두었던 새로운 도전을 하기에 아주 좋은 타이밍입니다.",
+            "대인 관계가 원만해집니다. 오해가 풀리고 주변 사람들과 즐거운 시간을 보낼 수 있습니다.",
+            "막혀있던 문제가 자연스럽게 해결될 조짐이 보입니다. 마음의 여유를 가지세요.",
+            "직감력이 뛰어난 날입니다. 중요한 결정의 순간에는 당신의 느낌을 믿어보세요.",
+            "가벼운 이동수가 있습니다. 산책이나 짧은 외출이 큰 기분 전환과 행운을 가져다줍니다.",
+            "예술적인 영감이 떠오르는 날입니다. 취미 생활이나 새로운 아이디어 구상에 집중해 보세요.",
+            "센스와 재치가 돋보이는 하루입니다. 위기 상황에서도 탁월한 문제 해결 능력을 보여줄 것입니다.",
+            "꼼꼼한 일 처리가 인정을 받습니다. 오늘은 작은 디테일에 조금 더 신경을 써보세요.",
+            "가족이나 가까운 지인에게 좋은 일이 생길 수 있습니다. 함께 기뻐하면 행운이 배가 됩니다.",
+            "먹을 복이 있는 날입니다. 평소 먹고 싶었던 맛있는 음식을 즐기며 스트레스를 날려보세요.",
+            "휴식이 필요한 타이밍입니다. 오늘은 무리하지 말고 따뜻한 차 한 잔의 여유를 가져보세요.",
+            "우연한 만남이 귀인으로 이어질 수 있습니다. 낯선 사람에게도 친절하게 대해보세요.",
+            "금전적인 지출을 조심해야 하는 날입니다. 충동구매를 피하고 계획적인 소비를 하세요."
+        ];
 
-        // 4. 화면에 데이터 뿌려주기
-        if (sign && horoscopes[sign]) {
-            document.getElementById('animal-icon').innerText = horoscopes[sign].icon;
-            document.getElementById('zodiac-title').innerText = horoscopes[sign].title;
-            document.getElementById('fortune-desc').innerText = horoscopes[sign].desc;
-        } else if (sign) {
-            document.getElementById('zodiac-title').innerText = "알 수 없는 띠";
-            document.getElementById('fortune-desc').innerText = "잘못된 NFC 정보입니다.";
-            document.getElementById('fortune-desc').classList.add('error');
+        // 3. 날짜와 띠를 조합하여 오늘의 고정 운세 번호 생성기
+        function getDailyFortune(signKey) {
+            const today = new Date();
+            // 날짜 고유 번호 (예: 20260302)
+            const dateSeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+            // 띠 영문자 길이와 첫 글자 코드를 활용한 숫자
+            const signSeed = signKey.length + signKey.charCodeAt(0); 
+            
+            // 날짜와 띠 조합을 운세 개수로 나눈 나머지를 인덱스로 사용 (매일 결과가 바뀜)
+            const index = Math.abs(dateSeed + signSeed) % fortunePool.length;
+            return fortunePool[index];
+        }
+
+        // 4. 화면 제어 로직
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSign = urlParams.get('sign');
+        const today = new Date();
+
+        if (currentSign && zodiacs[currentSign]) {
+            // NFC 태그로 접속했거나 띠를 선택한 경우 (결과 화면 표시)
+            document.getElementById('result-view').style.display = 'block';
+            document.getElementById('date-text').innerText = `${today.getMonth() + 1}월 ${today.getDate()}일 오늘의 운세`;
+            
+            const zodiacData = zodiacs[currentSign];
+            document.getElementById('animal-icon').innerText = zodiacData.icon;
+            document.getElementById('zodiac-title').innerText = zodiacData.title;
+            
+            // 매일 바뀌는 운세 문구 출력
+            document.getElementById('fortune-desc').innerText = getDailyFortune(currentSign);
+            
+        } else {
+            // 파라미터가 없거나 잘못된 경우 (전체 메뉴 화면 표시)
+            document.getElementById('menu-view').style.display = 'block';
+            
+            const grid = document.getElementById('zodiac-grid');
+            for (const [key, data] of Object.entries(zodiacs)) {
+                // 각 띠별 링크 버튼 생성
+                const link = document.createElement('a');
+                link.href = `?sign=${key}`;
+                link.className = 'grid-item';
+                link.innerHTML = `<span class="emoji">${data.icon}</span><span>${data.title}</span>`;
+                grid.appendChild(link);
+            }
         }
     </script>
 </body>
